@@ -25,11 +25,15 @@ export default function LoginPage() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        setError(data?.error || "Login failed");
-        return;
-      }
+  setError(data?.error || "Login failed");
+  return;
+}
 
-      router.push("/dashboard");
+if (data?.role === "ADMIN") {
+  router.push("/admin");
+} else {
+  router.push("/dashboard");
+}
     } catch {
       setError("Network error");
     } finally {

@@ -1,35 +1,16 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { jwtVerify } from "jose";
+import AdminUsersTable from "./user-table";
 
-export default async function AdminPage() {
-  const cookieStore = await cookies(); // 👈 ESTO
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) redirect("/login");
-
-  const secretStr = process.env.JWT_SECRET;
-  if (!secretStr) redirect("/login");
-
-  const secret = new TextEncoder().encode(secretStr);
-
-  let role = "USER";
-
-  try {
-    const { payload } = await jwtVerify(token, secret);
-    role = String(payload.role ?? "USER");
-  } catch {
-    redirect("/login");
-  }
-
-  if (role !== "ADMIN") redirect("/dashboard");
-
+export default function AdminPage() {
   return (
-    <main style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 26, fontWeight: 700 }}>Admin Panel</h1>
-      <p style={{ marginTop: 8, opacity: 0.8 }}>
-        Aquí vas a ver usuarios, boards, actividad, etc.
-      </p>
+    <main style={{ minHeight: "100vh", padding: 24, background: "#0b0b0b", color: "#fff" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 6 }}>Admin Panel</h1>
+        <p style={{ opacity: 0.75, marginBottom: 18 }}>
+          Gestión de usuarios (roles y estado).
+        </p>
+
+        <AdminUsersTable />
+      </div>
     </main>
   );
 }
